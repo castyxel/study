@@ -1,0 +1,229 @@
+在这里记录一下复习c++所感……
+hiding the implementation reduces program bugs
+protected: 继续类也不可以访问 inheriting class has not access to private one
+Access control can keep client programmers' hands off portions they shouldn't touch
+access control allows the lib designer to change the internal workings of the class without worrying about how it will affect the client programmer
+
+Reusing the implementation composition 组合 inheritance 封装
+composition use directly
+inheritance clone make additions and modifications
+
+The derived class can be the same type as the base class.
+
+The stack is an area in mymory that's used direclty by the microprocessor to store data during program execution
+
+The heap is managed dynamically at runtime. new\\delete
+
+The goal of C is to improve
+the productivity.
+
+
+第一章节
+/////////
+• Everything is an object.
+• A program is a bunch of objects telling
+each other what to do by sending
+messages.
+messages
+• Each object has its own memory made up
+of other objects.
+•E
+Every object has type.
+• All objects of a particular type can
+receive the same messages.
+
+
+• Creating abstract data types (classes) is
+a fundamental concept in object-
+oriented programming.
+• You can create variables (objects or
+instances) of a class (type) and
+manipulate those variables (sending
+messages or requests).
+• A class describes a set of objects that
+have identical characteristics (data
+elements) and behaviors (functionality).
+
+
+ The interface establishes what requests you can
+ make for a particular object.
+ • A class has a function associated with each
+ possible request, and when you make a
+ particular request to an object, that funtion is
+ called.
+
+the pre-processed code is often written to an intermediate file
+
+Compilation process
+Compiler:
+* parsing the pre-processed code.
+* synthesizing -->assembly languague code/machine code get-->xxxx.obj
+
+Linker:  combine object module---> executable program
+	libraries
+
+
+
+Edit: .cpp .h
+Compile .boj
+	Preprocess:  intermediate file/ macro processing #include...
+	Translate: Parsing synthesizing
+Link: .obj, .lib -> .exe
+Run
+
+
+
+Declarations  vs Definitions
+声明与定义
+声明介绍了某某名字
+定义会为名字申请空间
+＊＊you should always nitialize a variable at the point of difinition
+可以有多次声明，但只能定义一次。
+如果是Extern，看成一个全局
+函数有{}为定义，没有为声明
+其它变量没extern 为定义＆＆声明，否则为声明；
+注：extern int a; //声明  
+extern int a=0;//定义
+
+The namespace mechanism can prevent name collision
+
+
+输出格式
+dec oct hex 十进制  八进制 十六进制 
+
+文件操作
+
+其它概念之类
+when programming in C++, you should look at function lib
+Portable standard lib func
+
+specifier 
+long 
+short
+signed
+unsigned
+
+c++ allows the assignment of any type of pointer to a void*
+but does not allow you to assign a void pointer to any other type of ppinter
+val--> void pt O
+void pt---> pt X
+
+传参应是初始化，而不是赋值
+
+引用必须被初始化， 而且之后不可被改变
+int a=2, b=4;
+int& m=a; O
+int& m;   X
+int& m=b; X
+
+
+Argument Passing
+Formal argumeent---Actual arguments
+by value Variable---Data value
+by pointer Pointer--Address
+Reference  References-Variable name
+
+local variables default to auto so it is never necessary to declare something as an auto
+register　　这个关键字命令编译器尽可能的将变量存在CPU内部寄存器中而不是通过内存寻址访问以提高效率。
+static　　常见的两种用途: 
+　　　　1>统计函数被调用的次数; 
+　　　　2>减少局部数组建立和赋值的开销.变量的建立和赋值是需要一定的处理器开销的，特别是数组等含有较多元素的存储类型。在一些含有较多的变量并且被经常调用的函数中，可以将一些数组声明为static类型，以减少建立或者初始化这些变量的开销.
+
+
+详细说明: 
+　　　　1>、变量会被放在程序的全局存储区中，这样可以在下一次调用的时候还可以保持原来的赋值。这一点是它与堆栈变量和堆变量的区别。 
+　　　　2>、变量用static告知编译器，自己仅仅在变量的作用范围内可见。这一点是它与全局变量的区别。 
+　　　　3>当static用来修饰全局变量时，它就改变了全局变量的作用域，使其不能被别的程序extern，限制在了当前文件里，但是没有改变其存放位置，还是在全局静态储存区。
+　
+
+　使用注意: 
+　　　　1>若全局变量仅在单个C文件中访问，则可以将这个变量修改为静态全局变量，以降低模块间的耦合度； 
+　　　　2>若全局变量仅由单个函数访问，则可以将这个变量改为该函数的静态局部变量，以降低模块间的耦合度； 
+　　　　3>设计和使用访问动态全局变量、静态全局变量、静态局部变量的函数时，需要考虑重入问题(只要输入数据相同就应产生相同的输出)。
+
+
+volatile 告诉编译器i是随时可能发生变化的，每次使用它的时候必须从i的地址中读取，因而编译器生成的可执行码会重新从i的地址读取数据放在k中
+
+
+linkage
+internal linkage: specified by the keyword static in c++
+external linkage: for all files
+** Local variables
+	exist only temporarily, on the stack, while a function is being called. The linker doesn't know about aoutomatic varibles, and so these have no linkage. NO LINKAGE!!
+
+#define PI 3.14159 // replacement
+3 14159 replacement.
+// Its scope is: from #define to #undef
+
+
+dynamic_cast<Type>();
+static_cast<Type>();
+reinterpret_cast<Type>();
+const_cast<Type>();
+
+enum
+enum name{XX, XXX, XXXX, XXXXX};
+An enumerator can be initialized by a constant-expression of integral type!
+
+union 
+saving memory
+union A{
+  int a ;
+  double b;
+}
+
+arrays
+Notion: Most C++ implementations offer no range checking for arrays
+
+Function Pointer
+void (*fptr) ();  pointer to function
+void* fptr(); a function that returns a void*
+
+e.g  float (*(*fp2)(int, int float))(int);
+fp2 is a pointer to a function that takes 3 arguments and return a POINTER to Function 
+that takes an integer argument and returns a float
+定义了function pointer 后，要赋值后才能使用
+
+＊＊The function name func denotes the ADDRESS of a function func()
+
+
+
+& 4!!  Data Abstraction
+Issue when choosing a language Productivity Efficiency Safety Maintenance
+The only way to get massive increases in productivity is to use libraries.
+The most minimal package is a file with an extension like lib and one or more header files to tell your compiler what's is the library
+On platforms that span many architectures, often the only sensible way to deliver a library is with source code.
+One of the primary design goals of C++ is to make lib use easier.
+
+CLASS
+the class is a fundamental OOP concept in C++
+OBJECT
+an object is just a region of storage, with a unique identifier or a unique memory address
+
+RE-DEFINITION
+#infdef XXX_H
+#define XXX_H
+...
+#endif
+
+ATTENTION
+you may define the functions for that class in a translation unit.
+But you must include the header file to perform the declarations properly.
+
+Global scope resolution
+int a; void f(){}
+class A{
+public: int a;
+void f();
+};
+
+void S::f(){
+   ::f(); // global f();
+   ::a++; // global a
+   a--;   // class's a
+}
+
+void main(){ 
+    S s;
+    f(); // global f();
+}
