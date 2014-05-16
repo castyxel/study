@@ -227,3 +227,178 @@ void main(){
     S s;
     f(); // global f();
 }
+
+
+CLASS
+友元函数不可被继承
+静态变量为所有类所共有，无所初始化多少类，这些对象所共有的静态变量，只会被初始化一次，且所有对象都能改变该静态变量的值
+
+Object Layout 对象布局
+一般来说，编译器按访问块出现顺序分配内存
+但也不一定按声明顺序分布
+
+＆6！！ Initialization & Cleanup
+构造函数可以有参数及重载
+析构函数不可以
+
+当被赋值时，原来的值会被析构
+
+＆7！！Fnction Overloading & Default Arguments
+函数重载
+返回值不参加辨认，参数名不参与辨认，e.g:
+int add(int, int) == void add(int, int)
+int add(int a, int b) == int add(int x, int y)
+
+一些比较：
+struct vs class 
+struct defaults to be public
+class defaults to be private
+union vs class
+the way to store the data
+a union cannot be used as a base class
+
+默认参数从右往左分配，所以
+int f(int , int =0, char* =0); OK
+int f(int =0, int , char* =0); error
+在同一作用域只能被init 一次
+
+&8!! Const
+常量必须在定义时被init
+pointer
+const char* pt = xxx;
+这是一个指向常量的指针，所以想用该指针修改某值是不行的，如下
+pc[1]='r';
+char* const pt = xxx;
+这个指针是一个常量，必须指向xxx，不能再指向其它东西，但常量指针所指的东西能被修改
+pc[1]='r' ; //OK
+pc = xx; //错误，pc是常量，已经指向xxx；
+const char* const pc = xxx;
+兼有以上功能
+
+一个常量只能被一个指向常量的指针所指，普通指针是做不到的
+
+函数的实参如果是常量，则形参也必须为常量，函数内不可对常量作出修改
+若函数返回常量，不能被赋值给普通变量，只能赋值给常量
+不可以更改常量的值
+
+Const data members must be
+initialized in the member initializer list of
+constructor.
+
+常量成员函数不会更改成员的值
+The const member functions do not modify
+the data members.
+int Date::year() const
+{
+return y++;//error: attempt to change member value
+}
+
+常量对象表示，所有成员不会被改变
+常量对象，只能引用常量函数
+
+Mutable
+常量成员函数不会更改成员的值，如果成员前加上了mutable，就可以改了
+
+与用宏定义相同，常量有type checking and safety的优势
+
+＆9！！Inline Functions
+为什么要使用宏呢？
+因为函数的调用必须要将程序执行的顺序转移到函数所存放在内存中的某个地址，将函数的程序内容执行完后，再返回到转去执行该函数前的地方。这种转移操作要求在转去执行前要保存现场并记忆执行的地址，转回后要恢复现场，并按原来保存地址继续执行。因此，函数调用要有一定的时间和空间方面的开销，于是将影响其效率。
+而宏只是在预处理的地方把代码展开，不需要额外的空间和时间方面的开销，所以调用一个宏比调用一个函数更有效率。
+但是宏也有很多的不尽人意的地方。
+1、宏不能访问对象的私有成员。
+2、宏的定义很容易产生二意性。
+我们举个例子：
+#define square(x) (x*x)
+我们用一个数字去调用它,square(5)，这样看上去没有什么错误，结果返回25,是正确的，但是如果我们用squre (5+5)去调用的话，我们期望的结果是100，而宏的调用结果是(5+5*5+5),结果是35，这显然不是我们要得到的结果。避免这些错误的方法，一是给宏的参数都加上括号。
+#define square(x) ((x)*(x))
+
+第二部分：内联函数
+从上面的阐述，可以看到宏有一些难以避免的问题，怎么解决呢？
+内联函数是代码被插入到调用者代码处的函数。如同 #define 宏，内联函数通过避免被调用的开销来提高执行效率，尤其是它能够通过调用（“过程化集成”）被编译器优化。
+内联函数和宏很类似，而区别在于，宏是由预处理器对宏进行替代，而内联函数是通过编译器控制来实现的。而且内联函数是真正的函数，只是在需要用到的时候，内联函数像宏一样的展开，所以取消了函数的参数压栈，减少了调用的开销。你可以象调用函数一样来调用内联函数，而不必担心会产生于处理宏的一些问题。
+
+内联函数不能有循环、开关语句，不能写成递归形式
+如果内联函数有这些语句，则编译将该函数视同普通函数那样产生函数调用代码,递归函数(自己调用自己的函数)是不能被用来做内联函数的。内联函数只适合于只有1～5行的小函数。对一个含有许多语句的大函数，函数调用和返回的开销相对来说微不足道，所以也没有必要用内联函数实现。
+
+类的内联函数应该和类在同一个文件里
+
+＆10 Name Control 
+静态变量默认初始化为0
+如果是静态对象，是定义时 必须被初始化
+
+全局变化的constructor在进入main之前就已经被调用
+而静态对象的在需要时才会调用
+
+关于namespace
+namespace相当于对全局变量的一个管理，所以namespace里的内容也全是全局的
+即namespace之外的函数不可与namespace 之内的重名
+
+静态成员函数只能访问静态成员
+对于private的静态成品函数，在main里不能直接.这样访问，可以用::来访问
+
+一般来讲，静态对象初始化是按其定义顺序来的，但文件却不是，为了使其有序，可把静态对象的定义放在同一个文件里
+
+＆11 !! References & the Copy-Constructor
+
+引用前加上const，即确定的值和相对的标识符都可以用
+
+关于copy-cons..只有值传递和返回值时才写，若XX＝＆X，是不会用copy-con...的
+
+pointer to data members
+指向类的成员也行，但是不能直接调用，要依赖于指向类的指针
+
+＆12！！Operator Overloading
+函数的identified : by name, number and type of its parameters and the keyword(const, static)
+
+ 只有用户自定的数据结构有运算符重载
+
+ prefix @a a.operator @()
+ postfix a@ a.operator @(int)
+ binary a@b operator a.operator @(b)
+
+ 如果在成员函数前加const，代表返回类型为const，如果重载赋值运算符，会返回＊this，就是说，*this为常量，而赋值运算符会改变*this的值，就会产生矛盾
+ 所以，赋值运算符不可以返回常量
+
+ 如果双目运算的左位为某类，该运算符该内联在某类中，成为它的成员函数，否则，应该成为某类的友元
+
+ 几类特别的运算符重载
+ []；作为成员函数，返回值
+ ->: 作为成员函数，返回指向该类的指针
+
+ 类型转换 运算符重载
+ operator int(){return ...}
+
+ &14！！ Inheritance & Composition
+ about Inheritance
+ 基类若为public, 
+ 基类中所有public的成员，在derived class 中也是public的
+ 继承相当于把基类重写一遍，所以要求在继承前，基类必须被定义
+
+ 初始化：在constructor initializer list call the constructors for member objects来初始化成员类。
+ 初始化顺序：基类，成员类，自己
+ 而基类和成员按定义顺序进行初始化
+
+ 对于静态成员函数，derived改动的话，基类其它对象的静态成员函数都发生发动
+
+
+ Access Control
+ public继承，子类成员能访问基类的公有和保护，对象能访问公有
+ protect继承，子类成员能访问基类的公有和保护，对象不能访问基类
+ private继承，子类成员能访问基类的公有和保护，对象不能访问基类
+
+ one of the advantages of inheritance and composition is that these support incremental development by allowing you to introduce new code without causing bugs in existing code.
+
+ 利用::避免ambiguty，在多重继承时用，A::xxx(), B::xxx();
+ 派生类可以用基类的指针指
+
+ ＆15！！ Polymorphism & Virtual Functions
+ If a virtual function is defined outside the class body, virtual is only! need when declared;
+ 得到多态性的方法: 用虚函数写基类和派生类中的X函数，然后用指针或引用操作
+
+ 当只需要一个基类作为接口时，可以创造抽象类，抽象类有纯虚函数
+ 当抽象类被继承，派生类必须给虚函数实现，否则派生类也会变为抽象类
+ 如果抽象类什么都没有，没有成员，成员函数只有纯虚函数，则为纯抽象类
+ 不能建立抽象类的对象
+
+ 如果改动virtual的返回类型，会报错
