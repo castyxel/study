@@ -235,7 +235,6 @@ CLASS
 
 Object Layout 对象布局
 一般来说，编译器按访问块出现顺序分配内存
-但也不一定按声明顺序分布
 
 ＆6！！ Initialization & Cleanup
 构造函数可以有参数及重载
@@ -263,7 +262,9 @@ int f(int =0, int , char* =0); error
 在同一作用域只能被init 一次
 
 &8!! Const
-常量必须在定义时被init
+
+
+必须在定义时被init
 pointer
 const char* pt = xxx;
 这是一个指向常量的指针，所以想用该指针修改某值是不行的，如下
